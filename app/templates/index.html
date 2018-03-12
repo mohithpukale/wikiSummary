@@ -1,0 +1,70 @@
+
+{% extends "bootstrap/base.html" %}
+
+{% block title %}Wikipedia Summary{% endblock %}
+
+{% block head %}
+  {{super()}}
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/static/images/wikipedia-logo.png" rel="shortcut icon">
+  <link href="/static/css/index.css" type="text/css" rel="stylesheet" >
+{% endblock %}
+
+{% block navbar %}
+<div id="navbar" class="navbar navbar-fixed-top nav" role="navigation">
+    <div class="container">
+      <div class="navbar-header">
+        <a class="navbar-brand nav_a" href="/">
+          Wikipedia Summary
+        </a>
+      </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<br><br><br>
+<div class="container" id="content">
+
+  <div class="page-header">
+
+    <p style="text-align:center">
+      <img src="/static/images/wikipedia_logo.png" alt="Wikipedia_logo" width=20%>
+    </p>
+
+  </div>
+
+  <div class="row" id="inputBar" style="margin:0 20%;">
+    <div class="input-group" style="text-align:center" >
+      {% if q %}
+        <input id="inputField" type="text" class="form-control" value = {{ q }}>
+      {% else %}
+        <input id="inputField" type="text" class="form-control">
+      {% endif %}
+        <span class="input-group-btn">
+          <button id="searchBtn" class="btn btn-default" type="button">Go!</button>
+        </span>
+    </div>
+  </div>
+
+  <br><br>
+</div>
+<div class="footer" id="footer">
+  <div class="container">
+    <br>
+    <p>Powered by flask, elasticsearch</p>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+  {{super()}}
+  <script type="text/javascript" src="/static/js/index.js"></script>
+  <script type="text/javascript">
+  $(document).ready(function () {
+    // $("#content").empty();
+  });
+  </script>
+
+{% endblock %}
