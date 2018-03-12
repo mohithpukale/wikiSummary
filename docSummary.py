@@ -4,7 +4,8 @@ from nltk.tokenize import RegexpTokenizer
 from nltk.corpus import stopwords
 import nltk.data
 import re
-
+nltk. download('stopwords')
+nltk.download('punkt')
 
 def clean(string):
     string = re.sub(r"\'s", " \'s", string)
@@ -53,7 +54,7 @@ def get_summarized(input, num_sentences):
     base_words = [word.lower() for word in tokenizer.tokenize(input)]
     words = [word for word in base_words if word not in stopwords.words()]
     word_frequencies = FreqDist(words)
-    most_frequent_words = [pair[0] for pair in word_frequencies.most_common(100)
+    most_frequent_words = [pair[0] for pair in word_frequencies.most_common(100)]
 
     sent_detector = nltk.data.load('tokenizers/punkt/english.pickle')
     actual_sentences = sent_detector.tokenize(input)
@@ -74,6 +75,7 @@ def summarize(input, num_sentences):
     return " ".join(get_summarized(input, num_sentences))
 
 
+'''
 def main():
     f = open('plaintext.txt', 'r')
     input = f.read()
@@ -82,3 +84,4 @@ def main():
     print(summary)
 
 main()
+'''
