@@ -1,11 +1,11 @@
 import functools
+import re
+
+import nltk.data
+from nltk.corpus import stopwords
 from nltk.probability import FreqDist
 from nltk.tokenize import RegexpTokenizer
-from nltk.corpus import stopwords
-import nltk.data
-import re
-nltk. download('stopwords')
-nltk.download('punkt')
+
 
 def clean(string):
     string = re.sub(r"\'s", " \'s", string)
@@ -22,6 +22,7 @@ def clean(string):
     string = string.rstrip()
     string = remove_text_inside_brackets(string)
     return string.strip()
+
 
 def remove_text_inside_brackets(text, brackets="(){}[]"):
     count = [0] * (len(brackets) // 2)  # count open/close brackets
@@ -48,6 +49,7 @@ def reorder_sentences(output_sentences, input):
     output_sentences.sort(key=functools.cmp_to_key(custom_sort))
     return output_sentences
 
+
 def get_summarized(input, num_sentences):
 
     tokenizer = RegexpTokenizer('\w+')
@@ -63,25 +65,17 @@ def get_summarized(input, num_sentences):
 
     for word in most_frequent_words:
         for i in range(0, len(working_sentences)):
-            if (word in working_sentences[i] and actual_sentences[i] not in output_sentences):
+            if word in working_sentences[i] and actual_sentences[i] not in output_sentences:
                 output_sentences.append(actual_sentences[i])
                 break
-            if len(output_sentences) >= num_sentences: break
-        if len(output_sentences) >= num_sentences: break
-                           
+            if len(output_sentences) >= num_sentences:
+                break
+
+            if len(output_sentences) >= num_sentences:
+                break
+
     return reorder_sentences(output_sentences, input)
+
 
 def summarize(input, num_sentences):
     return " ".join(get_summarized(input, num_sentences))
-
-
-'''
-def main():
-    f = open('plaintext.txt', 'r')
-    input = f.read()
-    result = clean(input)
-    summary = summarize(result, 5)
-    print(summary)
-
-main()
-'''
