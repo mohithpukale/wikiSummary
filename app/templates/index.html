@@ -49,6 +49,29 @@
   </div>
 
   <br><br>
+
+  {% if error %}
+
+    <div class="alert alert-danger" role="alert">{{ error_msg }}</div>
+
+  {% else %}
+
+    {% if search_info %}
+      <div class="alert alert-success" role="alert">{{ search_info }}</div>
+    {% endif %}
+
+    {% for result in results %}
+
+      {% if result.text %}
+      <div class="panel container visible-lg-block visible-md-block">
+        <h3>{{ result.title|safe }}</h3>
+
+            <div id="r_snippet" style="font-size:18px;text">{{ result.text|safe }}</div>
+      </div>
+      {% endif %}
+    {% endfor %}
+
+  {% endif %}
 </div>
 <div class="footer" id="footer">
   <div class="container">
@@ -63,7 +86,6 @@
   <script type="text/javascript" src="/static/js/index.js"></script>
   <script type="text/javascript">
   $(document).ready(function () {
-    // $("#content").empty();
   });
   </script>
 
