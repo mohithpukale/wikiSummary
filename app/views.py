@@ -48,17 +48,12 @@ def query():
     res = es.search(index="wiki", body=term)
 
     print("Got %d Hits:" % res['hits']['total'])
+    results = []
     for hit in res['hits']['hits']:
         # temp = hit['_source']['text']
         result = docSummary.clean(hit['_source']['text'])
         summary = docSummary.summarize(result, 5)
-        hit['_source']['text'] = summary
+        result = {"title": hit['_source']['title'],"text": summary}
+        results.append(result)
 
-    '''
-    print('Original String\n\n')
-    print(temp)
-    print('Cleaned String\n\n')
-    print(result)
-    print('Summarized String\n\n')
-    print(summary)'''
-    return jsonify({'results': res['hits']})
+    return render_template('index.html',q=search_word,results=results)
