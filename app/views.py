@@ -25,7 +25,7 @@ def query():
             "filtered": {
                 "query": {
                     "query_string": {
-                        "query": "(" + search_word + "~1) AND (NOT(#REDIRECT)) AND (NOT(.*jpg))",
+                        "query": "(\"" + search_word + "\"~1) AND (NOT(#redirect)) AND (NOT(#REDIRECT)) AND (NOT(.*jpg))",
                         "fields": [
                             "text",
                             "title"
@@ -42,17 +42,16 @@ def query():
                 }
             }
         },
-        "size": 10,
+        "size": 5,
         "_source": [
             "text",
             "title"
         ]
     }
     res = es.search(index="wiki", body=term)
-
     print("Got %d Hits:" % res['hits']['total'])
     results = []
-    for hit in res['hits']['hits'][0:10]:
+    for hit in res['hits']['hits']:
         # temp = hit['_source']['text']
         result = docSummary.clean(hit['_source']['text'])
         summary = docSummary.summarize(result, 5)
