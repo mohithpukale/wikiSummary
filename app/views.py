@@ -22,24 +22,27 @@ def query():
     search_word = request.args.get('q')
     term = {
         "query": {
-            "bool": {
-                "must_not": [
-                    {
-                        "match": {
-                            "text": "#REDIRECT"
-                        }
+            "filtered": {
+                "query": {
+                    "query_string": {
+                        "query": "(" + search_word + "~1) AND (NOT(#REDIRECT)) AND (NOT(.*jpg))",
+                        "fields": [
+                            "text",
+                            "title"
+                        ],
+                        "fuzziness": 0,
+                        "phrase_slop": 1,
+                        "default_operator": "AND"
                     }
-                ],
-                "must": [
-                    {
-                        "match_phrase": {
-                            "text": search_word
-                        }
+                },
+                "filter": {
+                    "term": {
+                        "_type": "page"
                     }
-                ]
+                }
             }
         },
-        "size": 15,
+        "size": 10,
         "_source": [
             "text",
             "title"
@@ -49,7 +52,7 @@ def query():
 
     print("Got %d Hits:" % res['hits']['total'])
     results = []
-    for hit in res['hits']['hits']:
+    for hit in res['hits']['hits'][0:10]:
         # temp = hit['_source']['text']
         result = docSummary.clean(hit['_source']['text'])
         summary = docSummary.summarize(result, 5)
