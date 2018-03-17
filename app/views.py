@@ -54,7 +54,7 @@ def query():
     for hit in res['hits']['hits']:
         # temp = hit['_source']['text']
         result = docSummary.clean(hit['_source']['text'])
-        summary = docSummary.summarize(result, 5)
+        summary = docSummary.summarize(result, 3)
         result = {"title": hit['_source']['title'],"text": summary}
         results.append(result)
 
