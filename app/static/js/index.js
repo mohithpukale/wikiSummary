@@ -11,17 +11,21 @@ var f = document.getElementById('footer');
 // search event
 	// click search btn
 $('#searchBtn').click(function() {
-	search()
+    searchES()
+});
+
+$('#searchBtn2').click(function () {
+    searchSolr()
 });
 	// press enter
 $('#inputField').keydown(function(e){
 	if (e.keyCode == 13) {
-	 search()
+        searchES()
 	}
 });
 
 // go backend to search
-function search() {
+function searchES() {
 	var q = $('#inputField').val();
 	if (q == "" || q == null || q == undefined) {
 		location.href='/';
@@ -30,8 +34,26 @@ function search() {
 		var  entry = { "'": "&apos;", '"': '&quot;', '<': '&lt;', '>': '&gt;' };
 		q = q.replace(/(['")-><&\\\/\.])/g, function ($0) { return entry[$0] || $0; });
 
-		var string = '/query?q=' + q;
+        var string = '/query/es?q=' + q;
 		location.href = string;
 	};
+
+}
+
+function searchSolr() {
+    var q = $('#inputField').val();
+    if (q == "" || q == null || q == undefined) {
+        location.href = '/';
+    } else {
+        //parse special char
+        var entry = {"'": "&apos;", '"': '&quot;', '<': '&lt;', '>': '&gt;'};
+        q = q.replace(/(['")-><&\\\/\.])/g, function ($0) {
+            return entry[$0] || $0;
+        });
+
+        var string = '/query/solr?q=' + q;
+        location.href = string;
+    }
+    ;
 
 }
