@@ -54,8 +54,8 @@ def query_es():
     res = es.search(index="wiki", body=term)
     results = []
     for hit in res['hits']['hits']:
-        result = docSummary.clean(hit['_source']['text'])
-        summary = docSummary.summarize(result, 3)
+        text = docSummary.clean(hit['_source']['text'])
+        summary = docSummary.summarize(text, 3)
         result = {"title": hit['_source']['title'], "text": summary}
         results.append(result)
 
@@ -65,12 +65,14 @@ def query_es():
 @app.route('/query/solr/', methods=['GET'])
 def query_solr():
     search_word = request.args.get('q')
-    hits = solr.search("title:" + search_word)
+    hits = solr.search(search_word)
+    print(search_word)
     results = []
     for hit in hits:
-        result = docSummary.clean(hit['text'])
-        summary = docSummary.summarize(result, 3)
+        text = docSummary.clean(hit['text'])
+        summary = docSummary.summarize(text, 3)
         result = {"title": hit['title'], "text": summary}
         results.append(result)
 
+    print(results)
     return render_template('index.html', q=search_word, results=results)
