@@ -1,6 +1,6 @@
 import functools
 import re
-
+from textblob import TextBlob
 import nltk.data
 from nltk.corpus import stopwords
 from nltk.probability import FreqDist
@@ -21,11 +21,11 @@ def clean(string):
     string = re.sub(r"\]\]", "", string)
     string = re.sub(r"\n", "", string)
     string = string.rstrip()
-    string = remove_text_inside_brackets(string)
+    string = remove_text_inside_brackets(string, "(){}[]")
     return string.strip()
 
 
-def remove_text_inside_brackets(text, brackets="(){}[]"):
+def remove_text_inside_brackets(text, brackets):
     count = [0] * (len(brackets) // 2)  # count open/close brackets
     saved_chars = []
     for character in text:
@@ -52,15 +52,23 @@ def reorder_sentences(output_sentences, input):
 
 
 def get_summarized(input, num_sentences):
-
+    input = clean(input)
     tokenizer = RegexpTokenizer('\w+')
     base_words = [word.lower() for word in tokenizer.tokenize(input)]
     words = [word for word in base_words if word not in stopwords.words()]
     word_frequencies = FreqDist(words)
     most_frequent_words = [pair[0] for pair in word_frequencies.most_common(100)]
 
+    input = remove_text_inside_brackets(input, "====")
+
     sent_detector = nltk.data.load('tokenizers/punkt/english.pickle')
-    actual_sentences = sent_detector.tokenize(input)
+    actual_sentences_pre = sent_detector.tokenize(input)
+    actual_sentences = []
+    for sentence in actual_sentences_pre:
+        if(len(sentence.split()) <5):
+            continue
+        else:
+            actual_sentences.append(sentence)
     working_sentences = [sentence.lower() for sentence in actual_sentences]
     output_sentences = []
 
@@ -74,7 +82,6 @@ def get_summarized(input, num_sentences):
 
             if len(output_sentences) >= num_sentences:
                 break
-
     return reorder_sentences(output_sentences, input)
 
 
