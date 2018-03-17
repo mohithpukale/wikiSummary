@@ -44,7 +44,7 @@ def query_es():
                 }
             }
         },
-        "size": 5,
+        "size": 50,
         "_source": [
             "text",
             "title"
