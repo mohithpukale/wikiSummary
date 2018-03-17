@@ -1,6 +1,5 @@
 import functools
 import re
-from textblob import TextBlob
 import nltk.data
 from nltk.corpus import stopwords
 from nltk.probability import FreqDist
