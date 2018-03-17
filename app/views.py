@@ -57,9 +57,9 @@ def query_es():
 
     for hit in res['hits']['hits']:
         # temp = hit['_source']['text']
-        if (count < 10 and len(hit['_source']['text']) > 100):
+        if count < 10 and len(hit['_source']['text']) > 100:
             result = docSummary.clean(hit['_source']['text'])
-            summary = docSummary.summarize(result, 5)
+            summary = docSummary.summarize(result, 3)
             result = {"title": hit['_source']['title'], "text": summary}
             results.append(result)
             count += 1
@@ -74,7 +74,6 @@ def query_es():
 def query_solr():
     search_word = request.args.get('q')
     hits = solr.search(search_word)
-    print(search_word)
     results = []
     for hit in hits:
         text = docSummary.clean(hit['text'])
@@ -82,5 +81,4 @@ def query_solr():
         result = {"title": hit['title'], "text": summary}
         results.append(result)
 
-    print(results)
     return render_template('index.html', q=search_word, results=results)
