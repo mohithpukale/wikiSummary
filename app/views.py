@@ -27,7 +27,7 @@ def query_es():
             "filtered": {
                 "query": {
                     "query_string": {
-                        "query": "(\"" + search_word + "\"~1) AND (NOT(#redirect)) AND (NOT(#REDIRECT)) AND (NOT(.*jpg))",
+                        "query": "(" + search_word + "~1) AND (NOT(#redirect)) AND (NOT(#REDIRECT)) AND (NOT(.*jpg))",
                         "fields": [
                             "text",
                             "title"
@@ -53,11 +53,19 @@ def query_es():
 
     res = es.search(index="wiki", body=term)
     results = []
+    count = 0
+
     for hit in res['hits']['hits']:
-        text = docSummary.clean(hit['_source']['text'])
-        summary = docSummary.summarize(text, 3)
-        result = {"title": hit['_source']['title'], "text": summary}
-        results.append(result)
+        # temp = hit['_source']['text']
+        if (count < 10 and len(hit['_source']['text']) > 100):
+            result = docSummary.clean(hit['_source']['text'])
+            summary = docSummary.summarize(result, 5)
+            result = {"title": hit['_source']['title'], "text": summary}
+            results.append(result)
+            count += 1
+            print("Hello")
+            if count == 10:
+                break
 
     return render_template('index.html', q=search_word, results=results)
 
