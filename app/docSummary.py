@@ -18,6 +18,7 @@ def clean(string):
     string = re.sub(r"\\\(", " \( ", string)
     string = re.sub(r"\\\)", " \) ", string)
     string = re.sub(r"\?", " \? ", string)
+    string = re.sub(r"\]\]", "", string)
     string = re.sub(r"\n", "", string)
     string = string.rstrip()
     string = remove_text_inside_brackets(string)
