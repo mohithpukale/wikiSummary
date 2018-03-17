@@ -65,7 +65,7 @@ def get_summarized(input, num_sentences):
     actual_sentences_pre = sent_detector.tokenize(input)
     actual_sentences = []
     for sentence in actual_sentences_pre:
-        if(len(sentence.split()) <5):
+        if(len(sentence.split()) <=6):
             continue
         else:
             actual_sentences.append(sentence)
