@@ -64,7 +64,7 @@ def get_summarized(input, num_sentences):
     actual_sentences_pre = sent_detector.tokenize(input)
     actual_sentences = []
     for sentence in actual_sentences_pre:
-        if(len(sentence.split()) <=6):
+        if len(sentence.split()) <= 6:
             continue
         else:
             actual_sentences.append(sentence)
@@ -81,6 +81,8 @@ def get_summarized(input, num_sentences):
 
             if len(output_sentences) >= num_sentences:
                 break
+    for sentence in output_sentences:
+        sentence.capitalize()
     return reorder_sentences(output_sentences, input)
 
 

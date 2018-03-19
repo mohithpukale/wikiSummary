@@ -1,4 +1,4 @@
-import pysolr
+import requests
 from elasticsearch2 import Elasticsearch
 from flask import render_template
 from flask import request
@@ -10,7 +10,7 @@ es = Elasticsearch(['https://73efa8624ce5b1aa7b0636a629e2d9f1.us-west-1.aws.foun
                    http_auth=('admin', 'jfnN6ArBrfnlD6accc0WatAy'),
                    scheme="https")
 
-solr = pysolr.Solr('http://user:UV7DCYSGnPao@35.230.16.178/solr/wiki', timeout=10)
+solr = 'http://user:UV7DCYSGnPao@35.230.16.178/solr/wiki/select'
 
 
 @app.route('/')
@@ -63,7 +63,6 @@ def query_es():
             result = {"title": hit['_source']['title'], "text": summary}
             results.append(result)
             count += 1
-            print("Hello")
             if count == 10:
                 break
 
@@ -73,9 +72,10 @@ def query_es():
 @app.route('/query/solr/', methods=['GET'])
 def query_solr():
     search_word = request.args.get('q')
-    hits = solr.search(search_word)
+    hits = requests.get(solr, params={'q': search_word})
+    hits = hits.json()
     results = []
-    for hit in hits:
+    for hit in hits['response']['docs']:
         text = docSummary.clean(hit['text'])
         summary = docSummary.summarize(text, 3)
         result = {"title": hit['title'], "text": summary}
