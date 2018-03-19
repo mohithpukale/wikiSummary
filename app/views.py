@@ -27,7 +27,7 @@ def query_es():
             "filtered": {
                 "query": {
                     "query_string": {
-                        "query": "(" + search_word + "~1) AND (NOT(#redirect)) AND (NOT(#REDIRECT)) AND (NOT(.*jpg))",
+                        "query": "(" + search_word + ") AND (NOT(#redirect)) AND (NOT(#REDIRECT)) AND (NOT(.*jpg))",
                         "fields": [
                             "text",
                             "title"
